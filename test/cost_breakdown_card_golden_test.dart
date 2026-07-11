@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:sms_console/features/sms_console/domain/entities/cost_breakdown_entity.dart';
 import 'package:sms_console/features/sms_console/presentation/controllers/sms_console_controller.dart';
 import 'package:sms_console/features/sms_console/presentation/widgets/cost_breakdown_card.dart';
-import 'package:mockito/mockito.dart';
 
 class MockSmsConsoleController extends GetxController implements SmsConsoleController {
   @override final costBreakdown = Rxn<CostBreakdownEntity>();
