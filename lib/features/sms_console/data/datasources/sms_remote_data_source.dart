@@ -39,7 +39,7 @@ class SmsRemoteDataSourceImpl implements SmsRemoteDataSource {
       payload: {
         'to': to,
         'body': body,
-        if (referenceId != null) 'referenceId': referenceId,
+        'referenceId': ?referenceId,
       },
       parse: (json) => SmsMessageModel.fromJson(json),
     );
@@ -54,8 +54,8 @@ class SmsRemoteDataSourceImpl implements SmsRemoteDataSource {
       path: '/sms/cost/breakdown',
       method: MethodType.get,
       queryParams: {
-        if (from != null) 'from': from,
-        if (to != null) 'to': to,
+        'from': ?from,
+        'to': ?to,
       },
       parse: (json) => CostBreakdownModel.fromJson(json),
     );
@@ -70,7 +70,7 @@ class SmsRemoteDataSourceImpl implements SmsRemoteDataSource {
       path: '/sms/messages',
       method: MethodType.get,
       queryParams: {
-        if (cursor != null) 'cursor': cursor,
+        'cursor': ?cursor,
         'limit': limit,
       },
       parse: (json) => SmsHistoryResponseModel.fromJson(json),
