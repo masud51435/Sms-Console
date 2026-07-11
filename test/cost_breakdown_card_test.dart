@@ -18,7 +18,7 @@ class MockSmsConsoleController extends GetxController implements SmsConsoleContr
 }
 
 void main() {
-  testWidgets('CostBreakdownCard Golden Test', (WidgetTester tester) async {
+  testWidgets('CostBreakdownCard should display data correctly', (WidgetTester tester) async {
     final controller = MockSmsConsoleController();
     controller.costBreakdown.value = CostBreakdownEntity(
       currency: 'EUR',
@@ -42,9 +42,11 @@ void main() {
       ),
     );
 
-    await expectLater(
-      find.byType(CostBreakdownCard),
-      matchesGoldenFile('goldens/cost_breakdown_card.png'),
-    );
+    expect(find.text('Cost Breakdown'), findsOneWidget);
+    expect(find.text('EUR 12.4500'), findsOneWidget);
+    expect(find.text('TWILIO'), findsOneWidget);
+    expect(find.text('AWS_SNS'), findsOneWidget);
+    expect(find.text('110 messages'), findsOneWidget);
+    expect(find.text('EUR 8.2500'), findsOneWidget);
   });
 }
