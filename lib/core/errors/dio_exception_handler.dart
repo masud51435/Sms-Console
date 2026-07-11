@@ -15,13 +15,15 @@ class DioExceptionHandler {
     if (data is Map<String, dynamic>) {
       final errorData = data['error'];
       if (errorData is Map<String, dynamic>) {
-        serverMessage = errorData['message'] ?? errorData['code'];
+        serverMessage = (errorData['message'] ?? errorData['code'])?.toString();
       } else {
-        serverMessage = data['message'] ?? errorData;
+        serverMessage = (data['message'] ?? data['errorCode'] ?? errorData)?.toString();
       }
 
       metaData = data['errors'] ?? data['data'];
-      hasErrorKey = data.containsKey('message') || data.containsKey('error');
+      hasErrorKey = data.containsKey('message') ||
+          data.containsKey('error') ||
+          data.containsKey('errorCode');
     }
 
     switch (e.type) {
@@ -113,6 +115,15 @@ class DioExceptionHandler {
           debugMessage: e.message,
           stackTrace: e.stackTrace,
           hasErrorKey: hasErrorKey,
+        );
+      case 429:
+        final retryAfter = int.tryParse(e.response?.headers.value('Retry-After') ?? '');
+        return RateLimitFailure.withDebug(
+          message: message ?? (retryAfter != null ? 'Rate limit exceeded. Please retry in $retryAfter seconds.' : null),
+          statusCode: statusCode,
+          debugMessage: e.message,
+          stackTrace: e.stackTrace,
+          retryAfter: retryAfter,
         );
       case 500:
       case 502:

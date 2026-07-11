@@ -60,7 +60,7 @@ class TimeoutFailure extends Failures {
 
 class ServerFailure extends Failures {
   ServerFailure([String? message])
-    : super(message ?? "Server error, try again later");
+      : super(message ?? "Server error, try again later");
 
   ServerFailure.withDebug({
     String? message,
@@ -70,12 +70,32 @@ class ServerFailure extends Failures {
     dynamic metaData,
     bool hasErrorKey = false,
   }) : super(
-         message ?? "Server error, try again later",
+          message ?? "Server error, try again later",
+          statusCode: statusCode,
+          debugMessage: debugMessage,
+          stackTrace: stackTrace,
+          metaData: metaData,
+          hasErrorKey: hasErrorKey,
+        );
+}
+
+class RateLimitFailure extends Failures {
+  final int? retryAfter;
+  
+  RateLimitFailure([String? message, this.retryAfter])
+    : super(message ?? "Too many requests, please try again later");
+
+  RateLimitFailure.withDebug({
+    String? message,
+    int? statusCode,
+    String? debugMessage,
+    StackTrace? stackTrace,
+    this.retryAfter,
+  }) : super(
+         message ?? "Too many requests, please try again later",
          statusCode: statusCode,
          debugMessage: debugMessage,
          stackTrace: stackTrace,
-         metaData: metaData,
-         hasErrorKey: hasErrorKey,
        );
 }
 
