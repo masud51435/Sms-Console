@@ -24,6 +24,7 @@ class SmsConsoleController extends GetxController {
   final phoneController = TextEditingController();
   final bodyController = TextEditingController();
   late final TextEditingController tenantController;
+  final formKey = GlobalKey<FormState>();
 
   final isLoading = false.obs;
   final isHistoryLoading = false.obs;
@@ -94,8 +95,7 @@ class SmsConsoleController extends GetxController {
   }
 
   Future<void> sendSms() async {
-    if (phoneController.text.isEmpty || bodyController.text.isEmpty) {
-      ToastService.showError('Please fill in all fields');
+    if (!formKey.currentState!.validate()) {
       return;
     }
 
