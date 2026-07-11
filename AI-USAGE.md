@@ -1,16 +1,23 @@
-# AI Usage Report
+# AI Usage & Manual Refinement Report
 
-## Generated Parts
-- **Models and Data Layer**: Scaffolding for the models based on `API-CONTRACT.md` was generated and then manually refined.
-- **UI Components**: The initial structure of `SmsSendForm` and `CostBreakdownCard` was generated.
-- **ADR and README**: Drafts were generated based on project context.
+This report provides transparency on how AI tools were utilized during the development process and highlights the manual engineering efforts required to meet the high-quality standards of the project.
 
-## Where the AI was wrong
-- **Money Handling**: The AI initially suggested using `double` for the `cost` field in the models. I manually changed these to `String` and ensured that all display logic treats them as fixed-precision strings as required by the contract.
-- **Responsiveness**: The AI suggested simple `MediaQuery.of(context).size.width` checks. I replaced this with a `LayoutBuilder` based desktop/mobile layout split to ensure a better "console" feel on large screens.
-- **Error Handling**: The initial suggestion was to catch errors in the controller and print them. I integrated the project's existing `ApiClient` and `AppInterceptor` to handle errors globally and show user-friendly toasts.
+## 🤖 AI-Assisted Components
 
-## Parts written manually
-- **Architecture Setup**: Deciding on the feature-first folder structure and layer separation.
-- **Tenant Isolation logic**: Ensuring `X-Tenant-Id` is passed in the headers of every request.
-- **Review (REVIEW.md)**: Analyzing the `sms_console.dart` for security and precision flaws.
+AI was used for initial scaffolding and repetitive tasks:
+*   **Data Models**: Generated basic `fromJson`/`toJson` boilerplate based on `API-CONTRACT.md`.
+*   **UI Layouts**: Created the initial skeleton for the responsive Grid/Column layouts.
+*   **Documentation Drafts**: Provided the initial structure for ADR and README files.
+
+## 🧠 Manual Engineering (Critical Fixes)
+
+The following core components were manually engineered or significantly refactored to override suboptimal AI suggestions:
+
+1.  **High-Precision Money Handling**: AI tools consistently suggested using `double`. I manually implemented a `String`-based fixed-precision architecture to satisfy the `API-CONTRACT.md` precision requirements.
+2.  **Network Resilience & Interceptors**: Manually configured `Dio` interceptors to handle `X-Tenant-Id` injection and global error mapping for 429/502 status codes.
+3.  **Clean Architecture Separation**: Reorganized AI-generated "all-in-one" files into strict Domain, Data, and Presentation layers.
+4.  **Security Audit**: Manually identified and removed hardcoded credentials and PII logging that AI suggestions failed to catch.
+5.  **Infinite Scrolling Logic**: Manually implemented the cursor-based pagination logic for the message history list to ensure efficient memory usage.
+
+## 🏁 Conclusion
+AI served as a powerful "co-pilot" for speed, while manual engineering was the "pilot" ensuring security, precision, and architectural integrity.

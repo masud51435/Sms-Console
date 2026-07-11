@@ -1,30 +1,24 @@
 # ADR 0001: State Management Choice
 
 ## Status
-Accepted
+**Accepted**
 
 ## Context
-The application needs a predictable way to manage state, handle asynchronous operations (like sending SMS and fetching history), and decouple business logic from the UI. The project already had GetX integrated, but its usage was suboptimal.
+The application requires a robust way to manage asynchronous state (SMS sending, history pagination, analytics) while maintaining a high degree of decoupling between the business logic and the UI. The solution needed to be implemented within a tight 6-8 hour development window.
 
 ## Decision
-We decided to continue using **GetX** but with a strict architectural separation:
-1. **Views**: Pure UI, observing state via `Obx` or `GetX`.
-2. **Controllers**: Pure logic, handling state and interacting with repositories.
-3. **Repositories**: Abstracting data source implementations.
-4. **Bindings**: Managing dependency injection.
-
-## Alternatives Considered
-- **BLoC (Business Logic Component)**:
-  - *Pros*: Highly structured, great for complex state, excellent testability.
-  - *Cons*: High boilerplate, steeper learning curve for this specific project timeline (6-8 hours).
-- **Riverpod**:
-  - *Pros*: Compile-safe, no context-dependence, very flexible.
-  - *Cons*: Requires changing the root widget structure and adapting existing GetX-based utilities (like `Get.to`, `Get.snackbar`).
+We chose **GetX** as the primary state management and dependency injection solution, enforced with a strict **Clean Architecture** structure.
 
 ## Rationale
-GetX was chosen for its low boilerplate and the speed of development it enables, which is crucial for a 6-8 hour turnaround. By applying a clean architecture approach (Data/Domain/Presentation layers), we mitigated common "GetX mess" issues where logic is scattered.
+*   **Development Velocity**: GetX offers minimal boilerplate compared to BLoC or Redux, allowing more time to be spent on architecture and testing rather than boilerplate setup.
+*   **Feature Completeness**: It provides built-in solutions for Navigation, Dependency Injection, and Theme management, reducing the need for multiple competing packages.
+*   **Separation of Concerns**: By combining GetX with Domain-Driven Design (DDD), we ensure that logic resides in Controllers and UseCases, making the UI 100% reactive and logic-free.
+
+## Alternatives Considered
+1.  **BLoC**: Rejected due to high boilerplate and time constraints, though recognized as excellent for larger, long-term enterprise apps.
+2.  **Riverpod**: A strong contender; however, GetX was prioritized for its integrated "all-in-one" utility suite which sped up the initial scaffolding.
 
 ## Consequences
-- Development speed is high.
-- Logic is easily testable in the Controller layer.
-- Future transitions to other state management (like BLoC) would be easier because the business logic is already decoupled from the UI.
+*   **Testability**: Business logic in Controllers is easily testable without Flutter dependencies.
+*   **Simplicity**: The learning curve for future maintainers is low.
+*   **Architecture Debt**: To avoid "GetX Sprawl," we strictly isolated GetX to the Presentation layer, ensuring the Domain layer remains pure Dart.
